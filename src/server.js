@@ -10,7 +10,7 @@ const posts = [];
 const comments = [];
 
 app.get("/posts", (req, res) => {
-    res.send(posts);
+    res.send({posts, comments});
 })
 
 app.get("/posts/:id", (req, res) => {
@@ -21,13 +21,13 @@ app.get("/posts/:id", (req, res) => {
 
 app.post("/posts", (req,res) => {
     let incomingPost = req.body;
-    incomingPost = {...incomingPost, id: posts.length +1,  commentCount: 0}
+    incomingPost = {...incomingPost, id: posts.length +1}
     posts.push(incomingPost);
     res.send(incomingPost);
 });
 
 app.post("/posts/:id/comments", (req, res) => {
-    const postId = req.params.id;
+    const postId = parseInt(req.params.id);
     let incomingNewComment = req.body;
     incomingNewComment = {...incomingNewComment, id: comments.length + 1, postId: postId};
     comments.push(incomingNewComment);
@@ -35,8 +35,8 @@ app.post("/posts/:id/comments", (req, res) => {
 })
 
 app.get("/posts/:id/comments", (req, res) => {
-    const postId = req.params.id;
-    const thisPostComments = comments.filter(each => each.postId == postId);
+    const postId = parseInt(req.params.id);
+    const thisPostComments = comments.filter(each => each.postId === postId);
     res.send(thisPostComments)
 })
 
